@@ -28,9 +28,12 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
 
         EquipmentIssue newIssue = new EquipmentIssue();
         newIssue.setEquipmentId(dto.equipmentId());
+        newIssue.setReferenceId(dto.referenceID());
         newIssue.setReportedBy(dto.reportedBy());
         newIssue.setReportedAt(LocalDateTime.now());
+        newIssue.setIssueType(dto.issueType());
         newIssue.setIssueDescription(dto.issueDescription());
+        newIssue.setDetails(dto.details());
         newIssue.setSeverity(dto.severity());
         newIssue.setIssueStatus("OPEN");
         newIssue.setCreatedBy(dto.userName());
@@ -49,7 +52,9 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
 
         issue.setEquipmentId(dto.equipmentId());
         issue.setReportedBy(dto.reportedBy());
+        issue.setIssueType(dto.issueType());
         issue.setIssueDescription(dto.issueDescription());
+        issue.setDetails(dto.details());
         issue.setSeverity(dto.severity());
         issue.setUpdatedBy(dto.userName());
 
@@ -151,9 +156,12 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
         return new EquipmentIssueResponseDto(
                 entity.getId(),
                 entity.getEquipmentId(),
+                entity.getReferenceId(),
                 entity.getReportedBy(),
                 entity.getReportedAt(),
+                entity.getIssueType(),
                 entity.getIssueDescription(),
+                entity.getDetails(),
                 entity.getSeverity(),
                 entity.getIssueStatus(),
                 workOrderId,
