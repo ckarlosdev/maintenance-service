@@ -33,14 +33,23 @@ public class EquipmentIssue {
     @Column(name = "equipment_id", nullable = false)
     private Long equipmentId;
 
+    @Column(name = "reference_id")
+    private Long referenceId;
+
     @Column(name = "reported_by", nullable = false)
     private String reportedBy;
 
     @Column(name = "reported_at", nullable = false)
     private LocalDateTime reportedAt;
 
+    @Column(name = "issue_type")
+    private String issueType;
+
     @Column(name = "issue_description", nullable = false)
     private String issueDescription;
+
+    @Column(name = "details")
+    private String details;
 
     @Column(name = "severity", nullable = false)
     private String severity;

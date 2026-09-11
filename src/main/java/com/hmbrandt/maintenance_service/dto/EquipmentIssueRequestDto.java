@@ -7,5 +7,8 @@ public record EquipmentIssueRequestDto(
         String reportedBy,
         String issueDescription,
         String severity,
-        String userName
+        String userName,
+        Long referenceID,
+        String issueType,
+        String details
 ) {}
