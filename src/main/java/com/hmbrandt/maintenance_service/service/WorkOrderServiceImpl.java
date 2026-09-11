@@ -434,9 +434,12 @@ public class WorkOrderServiceImpl implements WorkOrderService {
         return new EquipmentIssueResponseDto(
                 entity.getId(),
                 entity.getEquipmentId(),
+                entity.getReferenceId(),
                 entity.getReportedBy(),
                 entity.getReportedAt(),
+                entity.getIssueType(),
                 entity.getIssueDescription(),
+                entity.getDetails(),
                 entity.getSeverity(),
                 entity.getIssueStatus(),
                 workOrderId,
