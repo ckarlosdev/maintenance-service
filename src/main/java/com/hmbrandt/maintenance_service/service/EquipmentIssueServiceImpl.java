@@ -137,9 +137,12 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
         return new EquipmentIssueSummaryDto(
                 p.getId(),
                 p.getEquipmentId(),
+                p.getReferenceId(),
                 p.getReportedBy(),
                 p.getReportedAt(),
+                p.getIssueType(),
                 p.getIssueDescription(),
+                p.getDetails(),
                 p.getSeverity(),
                 p.getIssueStatus(),
                 p.getWorkOrderId(),

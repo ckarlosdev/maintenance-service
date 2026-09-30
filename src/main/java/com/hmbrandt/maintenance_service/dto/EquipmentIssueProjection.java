@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public interface EquipmentIssueProjection {
     Long getId();
     Long getEquipmentId();
-    Long getReferenceType();
+    Long getReferenceId();
     String getReportedBy();
     LocalDateTime getReportedAt();
     String getIssueType();
