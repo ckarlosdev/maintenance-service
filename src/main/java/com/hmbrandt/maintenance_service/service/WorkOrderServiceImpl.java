@@ -338,8 +338,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 
             case IN_PROGRESS:
                 var inProgressIssues = (equipmentId != null)
-                        ? equipmentIssueRepository.findByIssueStatusAndEquipmentIdAndDeletedAtIsNullOrderByReportedAtDesc("IN_PROGRESS", equipmentId)
-                        : equipmentIssueRepository.findByIssueStatusAndDeletedAtIsNullOrderByReportedAtDesc("IN_PROGRESS");
+                        ? equipmentIssueRepository.findByIssueStatusAndEquipmentIdOrderByReportedAtDesc("IN_PROGRESS", equipmentId)
+                        : equipmentIssueRepository.findByIssueStatusOrderByReportedAtDesc("IN_PROGRESS");
 
                 return inProgressIssues.stream().map(issue -> new KpiDetailResponseDto(
                         issue.getId(),
@@ -354,8 +354,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
             case CRITICAL_ISSUES:
                 List<String> openStatuses = Arrays.asList("OPEN", "IN_PROGRESS");
                 var criticalIssues = (equipmentId != null)
-                        ? equipmentIssueRepository.findBySeverityAndIssueStatusInAndEquipmentIdAndDeletedAtIsNullOrderByReportedAtDesc("CRITICAL", openStatuses, equipmentId)
-                        : equipmentIssueRepository.findBySeverityAndIssueStatusInAndDeletedAtIsNullOrderByReportedAtDesc("CRITICAL", openStatuses);
+                        ? equipmentIssueRepository.findBySeverityAndIssueStatusInAndEquipmentIdOrderByReportedAtDesc("CRITICAL", openStatuses, equipmentId)
+                        : equipmentIssueRepository.findBySeverityAndIssueStatusInOrderByReportedAtDesc("CRITICAL", openStatuses);
 
                 return criticalIssues.stream().map(issue -> new KpiDetailResponseDto(
                         issue.getId(),

@@ -13,6 +13,8 @@ public interface EquipmentIssueService {
 
     EquipmentIssueResponseDto findById(Long id);
 
+    List<EquipmentIssueResponseDto> getReports();
+
     List<EquipmentIssueResponseDto> findByEquipmentId(Long JobId);
 
     void deleteIssue(Long id);

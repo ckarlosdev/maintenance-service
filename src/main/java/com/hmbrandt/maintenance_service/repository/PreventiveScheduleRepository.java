@@ -6,11 +6,13 @@ import com.hmbrandt.maintenance_service.entity.PreventiveSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface PreventiveScheduleRepository extends JpaRepository<PreventiveSchedule, Long> {
     List<PreventiveSchedule> findByEquipmentId(Long equipmentId);
 

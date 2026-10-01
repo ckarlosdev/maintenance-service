@@ -2,6 +2,7 @@ package com.hmbrandt.maintenance_service.controller;
 
 import com.hmbrandt.maintenance_service.dto.*;
 import com.hmbrandt.maintenance_service.service.EquipmentIssueService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,6 +67,13 @@ public class EquipmentIssueController {
     ){
         return ResponseEntity.ok(
                 equipmentIssueService.findByEquipmentId(equipmentId));
+    }
+
+    @Operation(summary = "Get Active Reports", description = "Get the reports actives without work order")
+    @GetMapping("/reports")
+    public ResponseEntity<List<EquipmentIssueResponseDto>> getAllReports(){
+        List<EquipmentIssueResponseDto> reports = equipmentIssueService.getReports();
+        return ResponseEntity.ok(reports);
     }
 
     @GetMapping("/{id}")

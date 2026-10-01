@@ -5,9 +5,11 @@ import com.hmbrandt.maintenance_service.entity.EquipmentIssue;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface EquipmentIssueRepository extends JpaRepository<EquipmentIssue, Long> {
     List<EquipmentIssue> findByEquipmentId(Long equipmentId);
 
@@ -37,9 +39,13 @@ public interface EquipmentIssueRepository extends JpaRepository<EquipmentIssue, 
         """, nativeQuery = true)
     List<EquipmentIssueProjection> findActiveIssuesByEquipmentIds(@Param("equipmentIds") List<Long> equipmentIds);
 
-    List<EquipmentIssue> findByIssueStatusAndDeletedAtIsNullOrderByReportedAtDesc(String status);
-    List<EquipmentIssue> findByIssueStatusAndEquipmentIdAndDeletedAtIsNullOrderByReportedAtDesc(String status, Long equipmentId);
+    List<EquipmentIssue> findByIssueStatusOrderByReportedAtDesc(String status);
 
-    List<EquipmentIssue> findBySeverityAndIssueStatusInAndDeletedAtIsNullOrderByReportedAtDesc(String severity, List<String> statuses);
-    List<EquipmentIssue> findBySeverityAndIssueStatusInAndEquipmentIdAndDeletedAtIsNullOrderByReportedAtDesc(String severity, List<String> statuses, Long equipmentId);
+    List<EquipmentIssue> findByIssueStatusAndEquipmentIdOrderByReportedAtDesc(String status, Long equipmentId);
+
+    List<EquipmentIssue> findBySeverityAndIssueStatusInOrderByReportedAtDesc(String severity, List<String> statuses);
+
+    List<EquipmentIssue> findBySeverityAndIssueStatusInAndEquipmentIdOrderByReportedAtDesc(String severity, List<String> statuses, Long equipmentId);
+
+    List<EquipmentIssue> findByWorkOrderIsNullOrderByReportedAtDesc();
 }
