@@ -6,11 +6,13 @@ server:
 spring:
   application:
     name: maintenance
+  profiles:
+    active: "${SPRING_PROFILES_ACTIVE:dev}"
 
   datasource:
     url: jdbc:mysql://localhost/maintenance_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    username: "${SPRING_DATASOURCE_USERNAME}"
-    password: "${SPRING_DATASOURCE_PASSWORD}"
+    username: "${SPRING_DATASOURCE_USERNAME:ckarlosTest}"
+    password: "${SPRING_DATASOURCE_PASSWORD:tre35g}"
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

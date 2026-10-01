@@ -171,4 +171,13 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
                 entity.getParentIssueId()
         );
     }
+
+    @Override
+    public List<EquipmentIssueResponseDto> getReports(){
+        return equipmentIssueRepository.findByWorkOrderIsNullOrderByReportedAtDesc()
+                .stream()
+                .map(this::mapIssueToDto)
+                .toList();
+    }
+
 }
