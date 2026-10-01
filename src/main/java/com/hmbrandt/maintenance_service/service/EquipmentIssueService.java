@@ -2,12 +2,13 @@ package com.hmbrandt.maintenance_service.service;
 
 
 import com.hmbrandt.maintenance_service.dto.*;
+import com.hmbrandt.maintenance_service.dto.Notification.EquipmentDataDto;
 
 import java.util.List;
 import java.util.Map;
 
 public interface EquipmentIssueService {
-    EquipmentIssueResponseDto saveIssue(EquipmentIssueRequestDto dto);
+    EquipmentIssueResponseDto saveIssue(EquipmentIssueRequestDto dto, EquipmentDataDto equipData);
 
     EquipmentIssueResponseDto updateIssue(Long id, EquipmentIssueUpdateDto dto);
 
