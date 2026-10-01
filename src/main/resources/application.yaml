@@ -33,6 +33,13 @@ application:
   security:
     jwt:
       secret-key: ${JWT_SECRET_KEY}
+  config:
+    recipients-path: ${RECIPIENTS_PATH:config/recipients.txt}
+    templates-path: ${TEMPLATES_PATH:config/templates/issue-report.html}
+
+services:
+  notification:
+    url: ${NOTIFICATION_SERVICE_URL:http://localhost:8088}
 
 logging:
   level:

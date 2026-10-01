@@ -1,6 +1,7 @@
 package com.hmbrandt.maintenance_service.controller;
 
 import com.hmbrandt.maintenance_service.dto.*;
+import com.hmbrandt.maintenance_service.dto.Notification.EquipmentIssueCreateDto;
 import com.hmbrandt.maintenance_service.service.EquipmentIssueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,9 +24,9 @@ public class EquipmentIssueController {
 
     @PostMapping
     public ResponseEntity<EquipmentIssueResponseDto> createIssue(
-            @Valid @RequestBody EquipmentIssueRequestDto issueDto
+            @Valid @RequestBody EquipmentIssueCreateDto issueDto
     ){
-        return new ResponseEntity<>(equipmentIssueService.saveIssue(issueDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(equipmentIssueService.saveIssue(issueDto.issueData(), issueDto.equipmentData()), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")

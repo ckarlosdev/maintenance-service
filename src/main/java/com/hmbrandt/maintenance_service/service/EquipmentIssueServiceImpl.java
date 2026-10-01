@@ -1,30 +1,48 @@
 package com.hmbrandt.maintenance_service.service;
 
+import com.hmbrandt.maintenance_service.client.NotificationClient;
 import com.hmbrandt.maintenance_service.dto.*;
+import com.hmbrandt.maintenance_service.dto.Notification.EquipmentDataDto;
 import com.hmbrandt.maintenance_service.entity.EquipmentIssue;
 import com.hmbrandt.maintenance_service.entity.WorkOrder;
 import com.hmbrandt.maintenance_service.repository.EquipmentIssueRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EquipmentIssueServiceImpl implements EquipmentIssueService {
 
     private final EquipmentIssueRepository equipmentIssueRepository;
+    private final NotificationClient notificationClient;
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+    @Value("${application.config.recipients-path}")
+    private String recipientsPath;
+
+    @Value("${application.config.templates-path}")
+    private String templatesPath;
 
     @Override
     @Transactional
-    public EquipmentIssueResponseDto saveIssue(EquipmentIssueRequestDto dto){
+    public EquipmentIssueResponseDto saveIssue(EquipmentIssueRequestDto dto, EquipmentDataDto equipData){
 
         EquipmentIssue newIssue = new EquipmentIssue();
         newIssue.setEquipmentId(dto.equipmentId());
@@ -40,6 +58,7 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
         newIssue.setUpdatedBy(dto.userName());
 
         EquipmentIssue savedIssue = equipmentIssueRepository.save(newIssue);
+        createNotification(savedIssue, dto.userName(), equipData);
 
         return mapIssueToDto(savedIssue);
     }
@@ -179,5 +198,81 @@ public class EquipmentIssueServiceImpl implements EquipmentIssueService {
                 .map(this::mapIssueToDto)
                 .toList();
     }
+
+    private void createNotification(
+            EquipmentIssue savedReport,
+            String currentUser,
+            EquipmentDataDto equipment
+    ) {
+        String htmlBody = messageFormat(
+                savedReport,
+                currentUser,
+                equipment
+        );
+
+        String recipients = getNotificationRecipients();
+        notificationClient.sendEmailNotification(
+                recipients,
+                "New issue report, Equipment #" + equipment.number(),
+                htmlBody
+        );
+    }
+
+    private String getNotificationRecipients() {
+        Path path = Paths.get(recipientsPath);
+        try {
+            if (Files.exists(path)) {
+                List<String> lines = Files.readAllLines(path);
+                // Filtra líneas vacías o comentarios (#) y las une separadas por coma
+                String recipients = lines.stream()
+                        .map(String::trim)
+                        .filter(line -> !line.isEmpty() && !line.startsWith("#"))
+                        .reduce((a, b) -> a + "," + b)
+                        .orElse("cramirez@hmbrandt.com"); // Fallback si el archivo está vacío
+                return recipients;
+            }
+        } catch (Exception e) {
+            log.error("Error reading the recipient file recipients.txt: {}", e.getMessage());
+        }
+        return "cramirez@hmbrandt.com";
+    }
+
+
+    private String messageFormat(
+            EquipmentIssue savedReport,
+            String currentUser,
+            EquipmentDataDto equipment
+    ) {
+        var notificationContent = new NotificationText(
+                "New Equipment Issue Report",
+                "A new equipment issue report has been generated in the system."
+        );
+
+        String formattedDate = savedReport.getReportedAt() != null
+                ? savedReport.getReportedAt().format(DATE_FORMATTER)
+                : "N/A";
+
+        try {
+            Path path = Paths.get(templatesPath);
+            String template = Files.readString(path);
+
+            return template
+                    .replace("${title}", notificationContent.title())
+                    .replace("${message}", notificationContent.message())
+                    .replace("${equipmentNumber}", String.valueOf(equipment.number()))
+                    .replace("${reportId}", String.valueOf(savedReport.getId()))
+                    .replace("${equipmentName}", equipment.name())
+                    .replace("${reportedAt}", formattedDate)
+                    .replace("${reportedBy}", currentUser)
+                    .replace("${issue}", String.valueOf(savedReport.getIssueType()))
+                    .replace("${details}", String.valueOf(savedReport.getDetails()));
+
+        } catch (Exception e) {
+            log.error("Error reading HTML template file: {}", e.getMessage());
+            // String de fallback simple si falla la lectura del archivo
+            return "<p>" + notificationContent.message() + "</p>";
+        }
+    }
+    private record NotificationText(String title, String message) {}
 
 }
