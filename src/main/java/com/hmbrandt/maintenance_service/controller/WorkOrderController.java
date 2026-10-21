@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/maintenance/work-order")
 @RequiredArgsConstructor
-@Tag(name = "Work Order", description = "Service to control the work orders equipment maintenance ")
+@Tag(name = "Work Order", description = "ServiceRepository to control the work orders equipment maintenance ")
 public class WorkOrderController {
 
     private final WorkOrderService workOrderService;

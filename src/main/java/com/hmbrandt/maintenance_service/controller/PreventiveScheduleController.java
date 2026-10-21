@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/maintenance/schedule")
 @RequiredArgsConstructor
-@Tag(name = "Preventive schedule", description = "Service to control the preventive schedule data")
+@Tag(name = "Preventive schedule", description = "ServiceRepository to control the preventive schedule data")
 public class PreventiveScheduleController {
 
     private final PreventiveScheduleService preventiveScheduleService;

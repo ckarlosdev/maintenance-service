@@ -17,7 +17,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v2/maintenance/issue")
 @RequiredArgsConstructor
-@Tag(name = "Equipment issues", description = "Service to control equipment issues")
+@Tag(name = "Equipment issues", description = "ServiceRepository to control equipment issues")
 public class EquipmentIssueController {
 
     private final EquipmentIssueService equipmentIssueService;
