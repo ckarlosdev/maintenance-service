@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v2/maintenance/checklist")
 @RequiredArgsConstructor
-@Tag(name = "Checklist Template", description = "ServiceTypeRepository to control the checklist templates")
+@Tag(name = "Checklist Template", description = "ServiceRepository to control the checklist templates")
 public class TemplateController {
 
     private final TemplateService templateService;

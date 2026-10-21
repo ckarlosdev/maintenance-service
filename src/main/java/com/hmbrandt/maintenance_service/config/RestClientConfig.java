@@ -10,7 +10,7 @@ import java.time.Duration;
 
 @Configuration
 public class RestClientConfig {
-    @Value("${NOTIFICATION_SERVICE_URL:${notification.serviceType.url:http://localhost:8088}}")
+    @Value("${NOTIFICATION_SERVICE_URL:${notification.service.url:http://localhost:8088}}")
     private String notificationServiceUrl;
 
     @Bean
