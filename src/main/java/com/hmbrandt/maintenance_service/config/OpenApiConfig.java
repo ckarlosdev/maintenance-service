@@ -12,7 +12,7 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Maintenance Service API")
+                        .title("Maintenance ServiceTypeRepository API")
                         .version("1.0")
                         .description("API for maintenance in the company shop")
                         .contact(new Contact().name("Carlos Ramirez").email("ckarlos_perez@hotmail.com")));

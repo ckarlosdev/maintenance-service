@@ -17,7 +17,7 @@ services:
 
   maintenance-service:
     build: .
-    container_name: maintenance-service
+    container_name: maintenance-serviceType
     depends_on:
       - db-maintenance
     restart: always
@@ -29,7 +29,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DB_PASS}
       - APPLICATION_SECURITY_JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - SPRING_PROFILES_ACTIVE=${PROFILES_ACTIVE}
-      - NOTIFICATION_SERVICE_URL=http://notification-service:8088
+      - NOTIFICATION_SERVICE_URL=http://notification-serviceType:8088
       - RECIPIENTS_PATH=/app/config/recipients.txt
       - TEMPLATES_PATH=/app/config/templates/issue-report.html
     volumes:

@@ -31,7 +31,7 @@ public class NotificationClient {
 
         } catch (Exception e) {
             // Se captura la excepción para evitar que un fallo en la notificación rompa la transacción principal
-            log.error("Error communicating with the notification-service for {}: {}", to, e.getMessage());
+            log.error("Error communicating with the notification-serviceType for {}: {}", to, e.getMessage());
         }
     }
 }
