@@ -20,68 +20,41 @@ public interface PreventiveScheduleRepository extends JpaRepository<PreventiveSc
 
     @Query(value = """
             SELECT 
-                    equipment_preventive_schedule_id AS equipmentPreventiveScheduleId,
-                    preventive_plan_id AS preventivePlanId,
-                    equipment_id AS equipmentId,
-                    last_performed_date AS lastPerformedDate,
-                    last_performed_meter AS lastPerformedMeter,
-                    due_date AS dueDate,
-                    due_meter AS dueMeter,
-                    is_overdue AS isOverdue,
-                    work_order_id AS workOrderId,
-                    order_status AS orderStatus,
-                    is_completed AS isCompleted,
-                    schedule_status AS scheduleStatus 
-                FROM (
-                    SELECT
-                        eps.equipment_preventive_schedule_id,
-                        eps.preventive_plan_id,
-                        eps.equipment_id,
-                        eps.last_performed_date,
-                        eps.last_performed_meter,
-                        eps.due_date,
-                        eps.due_meter,
-                        eps.is_overdue,
-                        active_wo.work_order_id,
-                        active_wo.order_status,
-                        active_wo.is_completed,
-                        CASE 
-                            WHEN active_wo.preventive_plan_id IS NOT NULL THEN 'assigned'
-                            ELSE 'unassigned'
-                        END AS schedule_status,
-            
-                        ROW_NUMBER() OVER (
-                            PARTITION BY eps.equipment_id
-                            ORDER BY
-                                (CASE WHEN active_wo.work_order_id IS NOT NULL THEN 0 ELSE 1 END) ASC,
-                                eps.is_overdue DESC,
-                                eps.due_date ASC,
-                                eps.due_meter ASC
-                        ) AS rn
-            
-                    FROM equipment_preventive_schedules eps
-                    LEFT JOIN (
-                        SELECT 
-                            wot.preventive_plan_id,
-                            wo.equipment_id,
-                            wo.work_order_id,
-                            wo.order_status,
-                            wot.is_completed
-                        FROM work_orders wo
-                        INNER JOIN work_order_tasks wot
-                            ON wot.work_order_id = wo.work_order_id
-                           AND wot.deleted_at IS NULL
-                        WHERE wo.deleted_at IS NULL
-                          AND wo.order_status != 'CLOSED' 
-                          AND wot.preventive_plan_id IS NOT NULL
-                    ) active_wo 
-                        ON active_wo.preventive_plan_id = eps.equipment_preventive_schedule_id
-                       AND active_wo.equipment_id = eps.equipment_id
-            
-                    WHERE eps.equipment_id IN ( :equipmentIds )
-                      AND eps.deleted_at IS NULL
-                ) sub
-                WHERE sub.rn = 1;
+                eps.equipment_preventive_schedule_id AS equipmentPreventiveScheduleId,
+                eps.preventive_plan_id AS preventivePlanId,
+                eps.equipment_id AS equipmentId,
+                eps.last_performed_date AS lastPerformedDate,
+                eps.last_performed_meter AS lastPerformedMeter,
+                eps.due_date AS dueDate,
+                eps.due_meter AS dueMeter,
+                eps.is_overdue AS isOverdue,
+                active_wo.work_order_id AS workOrderId,
+                active_wo.order_status AS orderStatus,
+                active_wo.is_completed AS isCompleted,
+                CASE 
+                    WHEN active_wo.preventive_plan_id IS NOT NULL THEN 'assigned'
+                    ELSE 'unassigned'
+                END AS schedule_status 
+            FROM equipment_preventive_schedules eps
+            LEFT JOIN (
+                SELECT 
+                    wot.preventive_plan_id,
+                    wo.equipment_id,
+                    wo.work_order_id,
+                    wo.order_status,
+                    wot.is_completed
+                FROM work_orders wo
+                INNER JOIN work_order_tasks wot
+                    ON wot.work_order_id = wo.work_order_id
+                   AND wot.deleted_at IS NULL
+                WHERE wo.deleted_at IS NULL
+                  AND wo.order_status != 'CLOSED' 
+                  AND wot.preventive_plan_id IS NOT NULL
+            ) active_wo 
+                ON active_wo.preventive_plan_id = eps.equipment_preventive_schedule_id
+               AND active_wo.equipment_id = eps.equipment_id
+            WHERE eps.equipment_id IN ( :equipmentIds )
+              AND eps.deleted_at IS NULL
         """, nativeQuery = true)
     List<PreventiveScheduleResponseProjection> findActiveSchedulesByEquipmentIds(@Param("equipmentIds") List<Long> equipmentIds);
 
